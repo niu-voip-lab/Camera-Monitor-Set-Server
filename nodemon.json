@@ -1,0 +1,9 @@
+{
+    "verbose": true,
+    "watch": ["*"],
+    "ext": "*",
+    "ignore": ["node_modules"],
+    "execMap": {
+      "rb": "ruby"
+    }
+  }
