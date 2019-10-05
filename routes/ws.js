@@ -12,11 +12,14 @@ router.sendVideo = function(name, data) {
             var client = videoClients[name][i];
             if(!client) continue;
 
-            if(client.readyState == 3 || client.readyState == 2) {
-                delete videoClients[name][i];
-            } else {
+            try{
                 client.send(data);
-            }
+            } catch(e) { }
+
+            // if(client.readyState == 3 || client.readyState == 2) {
+            //     logger.warn("Client closed");
+            //     delete videoClients[name][i];
+            // }
         }
     }
 }
@@ -27,11 +30,14 @@ router.sendAudio = function(name, data) {
             var client = audioClients[name][i];
             if(!client) continue;
 
-            if(client.readyState == 3) {
-                delete audioClients[name][i];
-            } else {
+            try{
                 client.send(data);
-            }
+            } catch(e) { }
+
+            // if(client.readyState == 3 || client.readyState == 2) {
+            //     logger.warn("Client closed");
+            //     delete audioClients[name][i];
+            // }
         }
     }
 }
