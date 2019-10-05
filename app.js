@@ -22,8 +22,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.ws('/echo', function(){
-  console.log("GO");
+app.ws('/echo', function(ws, req){
+  ws.on('message', function(msg){
+    console.log(msg);
+    ws.send(msg);
+  });
   
 });
 

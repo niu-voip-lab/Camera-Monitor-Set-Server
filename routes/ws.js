@@ -38,6 +38,7 @@ router.sendAudio = function(name, data) {
 
 router.ws('/video/:id', function (ws, req) {
     logger.info("New video client, request for %s", req.params.id);
+    req.params.id = req.params.id.replace(/\s+/gi, "").replace("\t", "");
     if(!videoClients[req.params.id]) {
         videoClients[req.params.id] = [];
     }
@@ -46,6 +47,7 @@ router.ws('/video/:id', function (ws, req) {
 
 router.ws('/audio/:id', function (ws, req) {
     logger.info("New audio client, request for %s", req.params.id);
+    req.params.id = req.params.id.replace(/\s+/gi, "").replace("\t", "");
     if(!audioClients[req.params.id]) {
         audioClients[req.params.id] = [];
     }
