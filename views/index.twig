@@ -2,136 +2,16 @@
 
 {% block body %}
     <canvas id="video-canvas"></canvas>
-	<div id="audio"></div>
-	<div id="time"></div>
-    <div>Server FPS : <span id="displayServerFps"></span></div>
-    <div>Receive FPS : <span id="displayReceiveFps"></span></div>
-    <div>Display FPS : <span id="displayFps"></span></div>
-    <div>Audio Segment per-Second : <span id="displaySPS"></span></div>
-    <div>Audio Queue : <span id="displayQueue"></span></div>
+	<canvas id="audio-canvas"></canvas>
 
     <script type="text/javascript" src="/jsmpeg.min.js"></script>
     <script type="text/javascript">
         var canvas = document.getElementById('video-canvas');
-        // var url = 'ws://'+document.location.hostname+':8082/';
         var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/   {{ id }}';
         var player = new JSMpeg.Player(url, {canvas: canvas});
 
-        function WsClient(url, msg = true) {
-            function log(str) {
-                if (msg) 
-                    console.log(`[${url}] ${str}`);
-                
-
-            }
-
-            var event = document.createElement('div');
-            this.on = function (name, func) {
-                event.addEventListener(name, function (e) {
-                    func(e.detail);
-                });
-            }
-
-            event.trigger = function (name, obj) {
-                var e = new CustomEvent(name, {detail: obj});
-                event.dispatchEvent(e);
-            }
-
-            websocket = new WebSocket(url);
-            websocket.onopen = function (evt) {
-                log("Connected");
-                event.trigger('open', evt);
-            };
-            websocket.onclose = function (evt) {
-                log("Colsed");
-                event.trigger('close', evt);
-            };
-            websocket.onmessage = function (evt) {
-                event.trigger('message', evt);
-            };
-            websocket.onerror = function (evt) {
-                event.trigger('error', evt);
-            };
-
-            this.send = function (msg) {
-                log('message sent!');
-                websocket.send(msg);
-            }
-        }
-
-        window.addEventListener("load", function () {
-            var audio = document.createElement('audio');
-            audio.controls = true;
-            audio.autoplay = true;
-            document.getElementById("audio").appendChild(audio);
-
-            var displayQueue = document.querySelector('#displayQueue');
-
-			var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/   {{ id }}';
-            var wsAudio = new WsClient(url);
-            var queue = [];
-            var sps = 0;
-            var lastTime = 0;
-
-            wsAudio.on('message', function (evt) {
-                sps++;
-                var arrayBuffer;
-                var fileReader = new FileReader();
-                fileReader.onload = function (event) {
-                    arrayBuffer = event.target.result;
-                    queue.push(arrayBuffer);
-                };
-                fileReader.readAsArrayBuffer(evt.data);
-            });
-
-            setInterval(function () {
-                var time = new Date().getTime();
-                if (time - lastTime >= 1000) {
-                    displaySPS.innerHTML = sps;
-                    lastTime = time;
-                    sps = 0;
-                }
-            }, 10);
-
-            try {
-                if (!'MediaSource' in window) 
-                    throw new ReferenceError('There is no MediaSource property in window object.');
-                
-
-                var mime = 'audio/mpeg';
-
-                if (!MediaSource.isTypeSupported(mime)) {
-                    alert('Can not play the media. Media of MIME type ' + mime + ' is not supported.');
-                    throw('Media of type ' + mime + ' is not supported.');
-                }
-
-                var mediaSource = new MediaSource();
-                var sourceBuffer = null;
-
-                audio.src = URL.createObjectURL(mediaSource);
-
-                var lock = false;
-
-                mediaSource.addEventListener('sourceopen', function () {
-                    sourceBuffer = this.addSourceBuffer(mime);
-                    // sourceBuffer.appendWindowEnd = 4.0;
-                });
-
-                setInterval(function () {
-                    if (queue.length > 0 && sourceBuffer != null && ! lock) {
-                        lock = true;
-                        // console.log(bytes);
-                        sourceBuffer.appendBuffer(queue.shift());
-                        sourceBuffer.addEventListener('updateend', function (_) {
-                            lock = false;
-                        });
-                    }
-                    displayQueue.innerHTML = queue.length;
-                }, 1);
-
-            } catch (e) {
-                console.error(e);
-            }
-        }, false);
+        var canvasAudio = document.getElementById('audio-canvas');
+        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/   {{ id }}';
+        var playerAudio = new JSMpeg.Player(urlAudio, {canvas: canvasAudio});
     </script>
 {% endblock %}

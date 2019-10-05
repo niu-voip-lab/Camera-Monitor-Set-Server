@@ -12,7 +12,7 @@ router.sendVideo = function(name, data) {
             var client = videoClients[name][i];
             if(!client) continue;
 
-            if(client.readyState == 3) {
+            if(client.readyState == 3 || client.readyState == 2) {
                 delete videoClients[name][i];
             } else {
                 client.send(data);
