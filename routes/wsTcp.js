@@ -11,9 +11,10 @@ var audio1Server = new TcpServer('', 8888);
 var audio2Server = new TcpServer('', 8899);
 
 function addCamera(socket) {
-    if(ipCams[socket.remoteAddress]) return;
-    logger.info('Camera "%s" created', socket.remoteAddress);
-    var ipcam = new IpCam(socket.remoteAddress, {
+    var id = socket.remoteAddress.replace("::ffff:", "");
+    if(ipCams[id]) return;
+    logger.info('Camera "%s" created', id);
+    var ipcam = new IpCam(id, {
         fps: 30,
         resolution: '1920x1080',
         frequency: 44100,
