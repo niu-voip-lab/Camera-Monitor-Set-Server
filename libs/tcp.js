@@ -47,4 +47,46 @@ function TcpServer(ip, port) {
 
 }
 
+function TcpClient(host, port) {
+    var client = new net.Socket();
+
+    var funcMap = {};
+    this.on = function(name, func) {
+        funcMap[name] = func;
+    }
+
+    function trigger(name, ...para) {
+        if(funcMap[name]) {
+            funcMap[name](...para);
+        }
+    }
+
+    client.on('data', function(data) {
+        trigger('data', data);
+    });
+    
+    client.on('error', function(error) {
+        trigger('error', error);
+    });
+
+    client.on('close', function() {
+        trigger('close');
+    });
+
+    this.close = function() {
+        client.end();
+    }
+
+    this.connect = function() {
+        client.connect(port, host, function() {
+            trigger('connection');
+        });
+    }
+
+    this.send = function(message) {
+        client.write(message);
+    }
+}
+
 module.exports.TcpServer = TcpServer;
+module.exports.TcpClient = TcpClient;

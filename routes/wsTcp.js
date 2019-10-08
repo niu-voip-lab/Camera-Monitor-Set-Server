@@ -85,7 +85,7 @@ audio2Receiver.on('data', function(socket, obj) {
 setInterval(function(){
     var now = new Date().getTime();
     if(now - lastTime >= 1000) {
-        // logger.info("receive fps=%d", fps);
+        logger.info("receive fps=%d", fps);
         fps = 0;
         lastTime = now;
     }
