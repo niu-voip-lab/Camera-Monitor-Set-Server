@@ -57,8 +57,12 @@ server.on('message', function(msg, remote) {
         } else if(currentStage == 4 && data.indexOf("OK") >= 0) {
             logger.info("Audio url 2 set.");
             currentStage++;
-            client.send("DONE");
+            client.send("CTL_URL:192.168.1.100:8800");
         } else if(currentStage == 5 && data.indexOf("OK") >= 0) {
+            logger.info("Control url 2 set.");
+            currentStage++;
+            client.send("DONE");
+        } else if(currentStage == 6 && data.indexOf("OK") >= 0) {
             currentStage++;
             logger.info("IP Cam %s setting finish.", remote.address);
             client.close();
