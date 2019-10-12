@@ -57,6 +57,33 @@ function StreamReceiver() {
     }
 }
 
+function ControlReceiver() {
+    var buffer = "";
+
+    var funcMap = {};
+    this.on = function(name, func) {
+        funcMap[name] = func;
+    }
+
+    function trigger(name, ...param) {
+        if(funcMap[name]) {
+            funcMap[name](...param);
+        }
+    }
+
+    this.input = function(data) {
+        buffer += data+"";
+        while(buffer.indexOf(";") >= 0) {
+            var idx = buffer.indexOf(";");
+            var cmd = buffer.substring(0, idx+1);
+            buffer = buffer.substring(idx+1);
+            trigger('data', cmd);
+        }
+    }
+
+}
+
 module.exports = {
-    StreamReceiver: StreamReceiver
+    StreamReceiver: StreamReceiver,
+    ControlReceiver: ControlReceiver,
 };

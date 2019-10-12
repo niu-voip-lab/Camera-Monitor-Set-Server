@@ -85,4 +85,5 @@ server.on('message', function(msg, remote) {
     client.connect();
 });
 
-server.start();
+// server.start();
+module.exports = server;

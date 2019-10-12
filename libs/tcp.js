@@ -42,8 +42,10 @@ function TcpServer(ip, port) {
         logger.info('Server is now closed');
     });
 
-    // 監聽指定的 Port
-    server.listen(port, ip); // 會觸發 listening 方法
+    this.start = function() {
+        // 監聽指定的 Port
+        server.listen(port, ip); // 會觸發 listening 方法
+    }
 
 }
 
