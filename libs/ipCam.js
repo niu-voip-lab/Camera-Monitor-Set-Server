@@ -7,13 +7,12 @@ var logger = require("../logger");
 
 function IpCam(name, param) {
     var funcMap = {};
-    this.on = function(_name, func) {
+    this.on = function (_name, func) {
         funcMap[_name] = func;
     }
 
-    function trigger(_name, ...para)
-    {
-        if(funcMap[_name]) {
+    function trigger(_name, ...para) {
+        if (funcMap[_name]) {
             funcMap[_name](...para);
         }
     }
@@ -51,114 +50,122 @@ function IpCam(name, param) {
     }
 
     function checkSocket() {
-        if(videoSocket != null && audio1Socket != null && audio2Socket != null && controlSocket != null) {
+        if (videoSocket != null && audio1Socket != null && audio2Socket != null && controlSocket != null) {
             logger.info("Camera \"%s\" is ready", name);
             handleSocket();
+            trigger('ready', name);
         }
     }
 
     var controlVStr = "V_ANG:";
     var controlHStr = "H_ANG:";
-    var controlVLock = false;
-    var controlHLock = false;
+    var controlLock = false;
 
     function sendVAngle() {
-        if(this.controlSocket != null) {
-            var id = setInterval(function(){
-                if(controlVLock) {
+        if (controlSocket != null) {
+            var id = setInterval(function () {
+                if (controlLock) {
                     return;
                 }
-                controlVLock = true;
+                controlLock = true;
                 clearInterval(id);
-                this.controlSocket.write(controlVStr+this.vAngle, function() {
-                    controlVLock = false;
+                controlSocket.write(controlVStr + vAngle, function () {
+                    controlLock = false;
                 });
             }, 1);
         }
     }
 
     function sendHAngle() {
-        if(this.controlSocket != null) {
-            var id = setInterval(function(){
-                if(controlHLock) {
+        if (controlSocket != null) {
+            var id = setInterval(function () {
+                if (controlLock) {
                     return;
                 }
-                controlHLock = true;
+                controlLock = true;
                 clearInterval(id);
-                this.controlSocket.write(controlHStr+this.hAngle, function() {
-                    controlHLock = false;
+                console.log("WRITE");
+                controlSocket.write(controlHStr + hAngle, function () {
+                    controlLock = false;
                 });
             }, 1);
         }
     }
 
-    this.setVideoSocket = function(socket) {
+    this.setVideoSocket = function (socket) {
         videoSocket = socket;
         checkSocket();
     }
 
-    this.setAudio1Socket = function(socket) {
+    this.setAudio1Socket = function (socket) {
         audio1Socket = socket;
         checkSocket();
     }
 
-    this.setAudio2Socket = function(socket) {
+    this.setAudio2Socket = function (socket) {
         audio2Socket = socket;
         checkSocket();
     }
 
-    this.setControlSocket = function(socket) {
+    this.setControlSocket = function (socket) {
         controlSocket = socket;
         checkSocket();
     }
 
-    this.getVAngle = function() {
-        return this.vAngle;
+    this.getName = function () {
+        return name;
     }
 
-    this.getHAngle = function() {
-        return this.hAngle;
+    this.getVAngle = function () {
+        return vAngle;
     }
 
-    this.setVAngle = function(angle) {
-        this.vAngle = angle;
+    this.getHAngle = function () {
+        return hAngle;
+    }
+
+    this.setVAngle = function (angle) {
+        vAngle = angle;
         sendVAngle();
     }
 
-    this.setHAngle = function(angle) {
-        this.hAngle = angle;
+    this.setHAngle = function (angle) {
+        hAngle = angle;
         sendHAngle();
     }
 
-    videoReceiver.on('data', function(socket, obj) {
+    videoReceiver.on('data', function (socket, obj) {
         videoCompressor.push(obj.data);
     });
 
-    audio1Receiver.on('data', function(socket, obj) {
+    audio1Receiver.on('data', function (socket, obj) {
         audioCompressor1.push(obj.data);
     });
 
-    audio2Receiver.on('data', function(socket, obj) {
+    audio2Receiver.on('data', function (socket, obj) {
         audioCompressor2.push(obj.data);
     });
 
-    controlReceiver.on('data', function(data){
-        if(data.indexOf(controlVStr) >= 0) {
+    controlReceiver.on('data', function (data) {
+        if (data.indexOf(controlVStr) >= 0) {
             logger.info("VServo angle changed. %s", data);
-        } else if(data.indexOf(controlHStr) >= 0) {
+            vAngle = parseFloat((data+"").replace(controlVStr, ""));
+        } else if (data.indexOf(controlHStr) >= 0) {
             logger.info("HServo angle changed. %s", data);
+            hAngle = parseFloat((data+"").replace(controlHStr, ""));
         }
+        trigger('angleChanged', vAngle, hAngle);
     });
 
-    videoCompressor.on('data', function(data) {
+    videoCompressor.on('data', function (data) {
         trigger('videoData', name, data);
     });
 
-    audioCompressor1.on('data', function(data) {
+    audioCompressor1.on('data', function (data) {
         trigger('audio1Data', name, data);
     });
 
-    audioCompressor2.on('data', function(data) {
+    audioCompressor2.on('data', function (data) {
         trigger('audio2Data', name, data);
     });
 }

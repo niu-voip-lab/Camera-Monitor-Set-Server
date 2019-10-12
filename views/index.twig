@@ -5,13 +5,19 @@
 	<canvas id="audio-canvas"></canvas>
 
     <script type="text/javascript" src="/jsmpeg.min.js"></script>
+    <script type="text/javascript" src="/javascripts/wsClient.js"></script>
     <script type="text/javascript">
         var canvas = document.getElementById('video-canvas');
-        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/   {{ id }}';
+        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/{{ id }}';
         var player = new JSMpeg.Player(url, {canvas: canvas});
 
         var canvasAudio = document.getElementById('audio-canvas');
-        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/   {{ id }}';
+        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/{{ id }}';
         var playerAudio = new JSMpeg.Player(urlAudio, {canvas: canvasAudio});
+
+        var ws = new WsClient('ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/{{ id }}');
+        ws.on('message', function(evt){
+            console.log(evt.data);
+        });
     </script>
 {% endblock %}

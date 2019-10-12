@@ -5,6 +5,14 @@ var IpCam = require("../libs/ipCam");
 
 var ipCams = {};
 var ws = null;
+
+var funcMap = {};
+function trigger(name, ...param) {
+    if(funcMap[name]) {
+        funcMap[name](...param);
+    }
+}
+
 var videoServer = new TcpServer('', 8877);
 var audio1Server = new TcpServer('', 8888);
 var audio2Server = new TcpServer('', 8899);
@@ -13,7 +21,6 @@ var controlServer = new TcpServer('', 8800);
 function getIdFromSocket(socket) {
     return socket.remoteAddress.replace("::ffff:", "");
 }
-
 
 function addCamera(socket) {
     var id = getIdFromSocket(socket);
@@ -47,6 +54,10 @@ function addCamera(socket) {
         // ws.sendAudio(name, data);
     });
 
+    ipcam.on('ready', function(name) {
+        trigger('cameraReady', name, ipcam);
+    });
+
     ipCams[id] = ipcam;
     return id;
 }
@@ -71,10 +82,21 @@ controlServer.on('connection', function(socket) {
     ipCams[id].setControlSocket(socket);    
 });
 
+function ExternelInterface() {
+    this.getIpCam = function(name) {
+        return ipCams[name];
+    }
+
+    this.on = function(name, func) {
+        funcMap[name] = func;
+    }
+}
+
 module.exports = function(_ws) {
     ws = _ws;
     videoServer.start();
     audio1Server.start();
     audio2Server.start();
     controlServer.start();
+    return new ExternelInterface();
 }
