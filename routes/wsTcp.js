@@ -31,12 +31,10 @@ ws.on('message', function (id, msg) {
 
     if(json.vAngle != null && json.vAngle != undefined && typeof(json.vAngle) == 'number') {
         cam.setVAngle(json.vAngle);
-        logger.info(json.vAngle);
     }
 
     if(json.hAngle != null && json.hAngle != undefined && typeof(json.hAngle) == 'number') {
         cam.setHAngle(json.hAngle);
-        logger.info(json.hAngle);
     }
 });
 

@@ -148,10 +148,10 @@ function IpCam(name, param) {
 
     controlReceiver.on('data', function (data) {
         if (data.indexOf(controlVStr) >= 0) {
-            logger.info("VServo angle changed. %s", data);
+            // logger.info("VServo angle changed. %s", data);
             vAngle = parseFloat((data+"").replace(controlVStr, ""));
         } else if (data.indexOf(controlHStr) >= 0) {
-            logger.info("HServo angle changed. %s", data);
+            // logger.info("HServo angle changed. %s", data);
             hAngle = parseFloat((data+"").replace(controlHStr, ""));
         }
         trigger('angleChanged', vAngle, hAngle);
