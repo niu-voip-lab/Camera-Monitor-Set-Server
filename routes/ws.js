@@ -34,7 +34,7 @@ router.sendVideo = function (name, data) {
                 client.send(data);
             } else {
                 videoClients[name].remove(i);
-                logger.info("Client closed");
+                logger.info("Video Client closed");
             }
         }
     }
@@ -48,7 +48,7 @@ router.sendAudio = function (name, data) {
                 client.send(data);
             } else {
                 audioClients[name].remove(i);
-                logger.info("Client closed");
+                logger.info("Audio Client closed");
             }
         }
     }
@@ -62,7 +62,7 @@ router.sendControl = function (name, data) {
                 client.send(data);
             } else {
                 controlClients[name].remove(i);
-                logger.info("Client closed");
+                logger.info("Control Client closed");
             }
         }
     }
