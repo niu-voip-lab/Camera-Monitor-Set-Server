@@ -84,7 +84,6 @@ function IpCam(name, param) {
                 }
                 controlLock = true;
                 clearInterval(id);
-                console.log("WRITE");
                 controlSocket.write(controlHStr + hAngle, function () {
                     controlLock = false;
                 });
@@ -161,12 +160,23 @@ function IpCam(name, param) {
         trigger('videoData', name, data);
     });
 
+    var AUDIO_LEFT = 0, AUDIO_RIGHT = 1;
+    function sendAudio(side, data) {
+        if(hAngle <= 0 && side == AUDIO_LEFT) {
+            trigger('audioData', name, data);
+        } else if(hAngle > 0 && side == AUDIO_RIGHT) {
+            trigger('audioData', name, data);
+        }
+    }
+
     audioCompressor1.on('data', function (data) {
         trigger('audio1Data', name, data);
+        sendAudio(AUDIO_LEFT, data);
     });
 
     audioCompressor2.on('data', function (data) {
         trigger('audio2Data', name, data);
+        sendAudio(AUDIO_RIGHT, data);
     });
 }
 
