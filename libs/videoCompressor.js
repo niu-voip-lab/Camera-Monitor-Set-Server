@@ -39,15 +39,15 @@ function VideoCompressor(idealFps, resolution, debug) {
     });
     
     // debug only
-    if(debug) {
-        ffmpeg.stderr.on('data', function (data) {
+    ffmpeg.stderr.on('data', function (data) {
+        if(debug) {
             logger.info(data.toString());
-        });
+        }
+    });
 
-        ffmpeg.on('close', function (code) {
-            logger.info('child process exited with code ' + code);
-        });
-    }
+    ffmpeg.on('close', function (code) {
+        logger.error('child process exited with code ' + code);
+    });
 }
 
 //ffmpeg -r 60 -f image2 -s 1280x720 -i pic%05d.png -i MP3FILE.mp3 -vcodec libx264 -b 4M -vpre normal -acodec copy OUTPUT.mp4 
