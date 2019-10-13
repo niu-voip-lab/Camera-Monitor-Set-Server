@@ -1,22 +1,93 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-    <canvas id="video-canvas"></canvas>
-	<canvas id="audio-canvas"></canvas>
+    <div class="mdl-grid">
+        <!--Video Panel-->
+        <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-grid">
+            <div style="width:100%; height:100%">
+                <canvas id="video-canvas" style="width:100%; height:auto;"></canvas>
+                <canvas id="audio-canvas" style="display:none;"></canvas>
+            </div>
+        </div>
+
+        <!--Control Panel-->
+        <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--2-col">
+            <div>
+                <h6>
+                    鏡頭角度 :
+                    <span id="angle">0</span>度
+                </h6>
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--1-col">
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barAngle'); if(x.value > 0) { x.value--;  x.MaterialSlider.change(parseInt(x.value)); updateAngle(); }">
+                            <i class="material-icons">keyboard_arrow_left</i>
+                        </button>
+                    </div>
+                    <div class="mdl-cell mdl-cell--10-col">
+                        <div style="margin-top:10px;">
+                            <input class="mdl-slider mdl-js-slider" id="barAngle" max="180" min="0" style="width:100%;" tabindex="0" type="range" value="0">
+                        </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--1-col">
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barAngle'); if(x.value < 180) { x.value++;  x.MaterialSlider.change(parseInt(x.value)); updateAngle(); }">
+                            <i class="material-icons">keyboard_arrow_right</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h6>鏡頭擺動</h6>
+                <div style="margin-left: 20px;">
+                    <label id="isSwing" class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
+                        <input class="mdl-switch__input" id="switch-2" type="checkbox">
+                        <span class="mdl-switch__label"></span>
+                    </label>
+                </div>
+
+            </div>
+
+            <div>
+                <h6>
+                    擺動速度 :
+                    <span id="swingSpeed">0</span>%
+                </h6>
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--1-col">
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barSwingSpeed'); if(x.value > 0) { x.value--;  x.MaterialSlider.change(parseInt(x.value)); onSwingChange(x); }">
+                            <i class="material-icons">remove</i>
+                        </button>
+                    </div>
+                    <div class="mdl-cell mdl-cell--10-col">
+                        <div style="margin-top:10px;">
+                            <input class="mdl-slider mdl-js-slider" id="barSwingSpeed" max="100" min="0" style="width:100%;" tabindex="0" type="range" value="0">
+                        </div>
+                    </div>
+                    <div class="mdl-cell mdl-cell--1-col">
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barSwingSpeed'); if(x.value < 100) { x.value++;  x.MaterialSlider.change(parseInt(x.value)); onSwingChange(x); }">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Javascript-->
 
     <script type="text/javascript" src="/jsmpeg.min.js"></script>
     <script type="text/javascript" src="/javascripts/wsClient.js"></script>
     <script type="text/javascript">
         var canvas = document.getElementById('video-canvas');
-        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/{{ id }}';
+        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/  {{ id }}';
         var player = new JSMpeg.Player(url, {canvas: canvas});
 
         var canvasAudio = document.getElementById('audio-canvas');
-        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/{{ id }}';
+        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/  {{ id }}';
         var playerAudio = new JSMpeg.Player(urlAudio, {canvas: canvasAudio});
 
-        var ws = new WsClient('ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/{{ id }}');
-        ws.on('message', function(evt){
+        var ws = new WsClient('ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/  {{ id }}');
+        ws.on('message', function (evt) {
             console.log(evt.data);
         });
     </script>
