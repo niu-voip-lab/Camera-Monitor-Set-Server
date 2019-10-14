@@ -1,7 +1,8 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-    <div class="mdl-grid">
+    <div
+        class="mdl-grid">
         <!--Video Panel-->
         <div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--10-col mdl-grid">
             <div style="width:100%; height:100%">
@@ -13,63 +14,60 @@
         <!--Control Panel-->
         <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--2-col">
             <div>
-                <h6>
-                    鏡頭角度 :
-                    <span id="angle">0</span>度
-                </h6>
                 <div class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--1-col">
-                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barAngle'); if(x.value > 0) { x.value--;  x.MaterialSlider.change(parseInt(x.value)); updateAngle(); }">
+                    <div class="mdl-cell mdl-cell--12-col">
+                        <h5>鏡頭角度：</h5>
+                        <h5>水平 :
+                            <span id="hAngle">0</span>度</h5>
+                        <h5>垂直 :
+                            <span id="vAngle">0</span>度</h5>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="mdl-grid">
+                    <div
+                        class="mdl-cell mdl-cell--4-col"><!--TAB-->
+                    </div>
+                    <div class="mdl-cell mdl-cell--4-col">
+                        <button name="up" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored control-button">
+                            <i class="material-icons">keyboard_arrow_up</i>
+                        </button>
+                    </div>
+                    <div
+                        class="mdl-cell mdl-cell--4-col"><!--TAB-->
+                    </div>
+
+                    <div class="mdl-cell mdl-cell--4-col">
+                        <button name="left" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored control-button">
                             <i class="material-icons">keyboard_arrow_left</i>
                         </button>
                     </div>
-                    <div class="mdl-cell mdl-cell--10-col">
-                        <div style="margin-top:10px;">
-                            <input class="mdl-slider mdl-js-slider" id="barAngle" max="180" min="0" style="width:100%;" tabindex="0" type="range" value="0">
-                        </div>
+                    <div class="mdl-cell mdl-cell--4-col">
+                        <button name="restore" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored control-button">
+                            <i class="material-icons">settings_backup_restore</i>
+                        </button>
                     </div>
-                    <div class="mdl-cell mdl-cell--1-col">
-                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barAngle'); if(x.value < 180) { x.value++;  x.MaterialSlider.change(parseInt(x.value)); updateAngle(); }">
+                    <div class="mdl-cell mdl-cell--4-col">
+                        <button name="right" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored control-button">
                             <i class="material-icons">keyboard_arrow_right</i>
                         </button>
                     </div>
-                </div>
-            </div>
 
-            <div>
-                <h6>鏡頭擺動</h6>
-                <div style="margin-left: 20px;">
-                    <label id="isSwing" class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-2">
-                        <input class="mdl-switch__input" id="switch-2" type="checkbox">
-                        <span class="mdl-switch__label"></span>
-                    </label>
-                </div>
-
-            </div>
-
-            <div>
-                <h6>
-                    擺動速度 :
-                    <span id="swingSpeed">0</span>%
-                </h6>
-                <div class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--1-col">
-                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barSwingSpeed'); if(x.value > 0) { x.value--;  x.MaterialSlider.change(parseInt(x.value)); onSwingChange(x); }">
-                            <i class="material-icons">remove</i>
+                    <div
+                        class="mdl-cell mdl-cell--4-col"><!--TAB-->
+                    </div>
+                    <div class="mdl-cell mdl-cell--4-col">
+                        <button name="down" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored control-button">
+                            <i class="material-icons">keyboard_arrow_down</i>
                         </button>
                     </div>
-                    <div class="mdl-cell mdl-cell--10-col">
-                        <div style="margin-top:10px;">
-                            <input class="mdl-slider mdl-js-slider" id="barSwingSpeed" max="100" min="0" style="width:100%;" tabindex="0" type="range" value="0">
-                        </div>
-                    </div>
-                    <div class="mdl-cell mdl-cell--1-col">
-                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" onclick="var x = document.querySelector('#barSwingSpeed'); if(x.value < 100) { x.value++;  x.MaterialSlider.change(parseInt(x.value)); onSwingChange(x); }">
-                            <i class="material-icons">add</i>
-                        </button>
+                    <div
+                        class="mdl-cell mdl-cell--4-col"><!--TAB-->
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -79,16 +77,105 @@
     <script type="text/javascript" src="/javascripts/wsClient.js"></script>
     <script type="text/javascript">
         var canvas = document.getElementById('video-canvas');
-        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/  {{ id }}';
+        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/     {{ id }}';
         var player = new JSMpeg.Player(url, {canvas: canvas});
 
         var canvasAudio = document.getElementById('audio-canvas');
-        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/  {{ id }}';
+        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/     {{ id }}';
         var playerAudio = new JSMpeg.Player(urlAudio, {canvas: canvasAudio});
 
-        var ws = new WsClient('ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/  {{ id }}');
-        ws.on('message', function (evt) {
-            console.log(evt.data);
+        var controlUrl = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/     {{ id }}';
+        var ws = new WsClient(controlUrl);
+
+        ws.on('close', function () {
+            setTimeout(function () {
+                console.log("trying to reconnect");
+                ws = new WsClient(controlUrl);
+            }, 1000);
         });
+
+        var hAngleSpan = document.querySelector('#hAngle');
+        var vAngleSpan = document.querySelector('#vAngle');
+
+        var currentHAngle = 0;
+        var currentVAngle = 0;
+
+        ws.on('message', function (evt) {
+            var data = evt.data;
+            var json = null;
+            try {
+                json = JSON.parse(evt.data);
+            } catch (e) {
+                console.error("JSON parse Error!");
+                return;
+            }
+
+            if (json.hAngle != null && json.hAngle != undefined) {
+                currentHAngle = json.hAngle;
+                hAngleSpan.innerHTML = Math.round(json.hAngle * 1000) / 1000;
+            }
+
+            if (json.vAngle != null && json.vAngle != undefined) {
+                currentVAngle = json.vAngle;
+                vAngleSpan.innerHTML = Math.round(json.vAngle * 1000) / 1000;
+            }
+        });
+
+        function sendAngle() {
+            ws.send(JSON.stringify({"type": "angle", "vAngle": currentVAngle, "hAngle": currentHAngle}));
+        }
+
+        var connected = false;
+        var direction = null;
+
+        ws.on('open', function () {
+            connected = true;
+        });
+
+        function restore() {
+            currentVAngle = 0;
+            currentHAngle = 0;
+            direction == null;
+            sendAngle();
+        }
+
+        function onButtonsDown() {
+            console.log("DOWN");
+            if (this.name == "restore") {
+                restore();
+                return;
+            }
+            direction = this.name;
+        }
+
+        function onButtonsUp() {
+            direction = null;
+            console.log("UP");
+        }
+
+        var step = 5;
+        setInterval(function () {
+            if (direction == null || ! connected) 
+                return;
+
+            if (direction == "up" && currentVAngle < 45) {
+                currentVAngle += step;
+            } else if (direction == "down" && currentVAngle > -75) {
+                currentVAngle -= step;
+            } else if (direction == "left" && currentHAngle > -80) {
+                currentHAngle -= step;
+            } else if (direction == "right" && currentHAngle < 80) {
+                currentHAngle += step;
+            } else if (direction == "restore") {
+                return;
+            }
+            sendAngle();
+        }, 100);
+
+        var buttons = document.querySelectorAll(".control-button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("mousedown", onButtonsDown);
+            buttons[i].addEventListener("mouseup", onButtonsUp);
+        }
     </script>
 {% endblock %}

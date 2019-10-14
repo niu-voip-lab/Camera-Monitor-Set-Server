@@ -29,12 +29,20 @@ ws.on('message', function (id, msg) {
         return;
     }
 
-    if(json.vAngle != null && json.vAngle != undefined && typeof(json.vAngle) == 'number') {
-        cam.setVAngle(json.vAngle);
-    }
-
-    if(json.hAngle != null && json.hAngle != undefined && typeof(json.hAngle) == 'number') {
-        cam.setHAngle(json.hAngle);
+    if(json.type == "query") {
+        ws.sendControl(id, JSON.stringify({
+            isLeftAudioEnabled: cam.isLeftAudioEnabled(),
+            vAngle: cam.getVAngle(),
+            hAngle: cam.getHAngle(),
+        }));
+    } else if(json.type == "angle") {
+        if(json.vAngle != null && json.vAngle != undefined && typeof(json.vAngle) == 'number') {
+            cam.setVAngle(json.vAngle);
+        }
+    
+        if(json.hAngle != null && json.hAngle != undefined && typeof(json.hAngle) == 'number') {
+            cam.setHAngle(json.hAngle);
+        }
     }
 });
 

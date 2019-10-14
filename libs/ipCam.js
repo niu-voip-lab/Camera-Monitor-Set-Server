@@ -133,6 +133,10 @@ function IpCam(name, param) {
         sendHAngle();
     }
 
+    this.isLeftAudioEnabled = function() {
+        return (hAngle <= 0);
+    }
+
     videoReceiver.on('data', function (socket, obj) {
         videoCompressor.push(obj.data);
     });
