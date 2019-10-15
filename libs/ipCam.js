@@ -124,11 +124,13 @@ function IpCam(name, param) {
     }
 
     this.setVAngle = function (angle) {
+        if(angle == null || angle == undefined) return;
         vAngle = angle;
         sendVAngle();
     }
 
     this.setHAngle = function (angle) {
+        if(angle == null || angle == undefined) return;
         hAngle = angle;
         sendHAngle();
     }
@@ -152,10 +154,16 @@ function IpCam(name, param) {
     controlReceiver.on('data', function (data) {
         if (data.indexOf(controlVStr) >= 0) {
             // logger.info("VServo angle changed. %s", data);
-            vAngle = parseFloat((data+"").replace(controlVStr, ""));
+            var temp = parseFloat((data+"").replace(controlVStr, ""));
+            if(temp != null && temp != undefined && !isNaN(temp)) {
+                vAngle = temp;
+            }
         } else if (data.indexOf(controlHStr) >= 0) {
             // logger.info("HServo angle changed. %s", data);
-            hAngle = parseFloat((data+"").replace(controlHStr, ""));
+            var temp = parseFloat((data+"").replace(controlHStr, ""));
+            if(temp != null && temp != undefined && !isNaN(temp)) {
+                hAngle = temp;
+            }
         }
         trigger('angleChanged', vAngle, hAngle);
     });
@@ -175,12 +183,12 @@ function IpCam(name, param) {
 
     audioCompressor1.on('data', function (data) {
         trigger('audio1Data', name, data);
-        sendAudio(AUDIO_LEFT, data);
+        sendAudio(AUDIO_RIGHT, data);
     });
 
     audioCompressor2.on('data', function (data) {
         trigger('audio2Data', name, data);
-        sendAudio(AUDIO_RIGHT, data);
+        sendAudio(AUDIO_LEFT, data);
     });
 }
 

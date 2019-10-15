@@ -87,6 +87,14 @@
         var controlUrl = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/     {{ id }}';
         var ws = new WsClient(controlUrl);
 
+        ws.on('open', function () {
+            ws.send(JSON.stringify({
+                "type": "query"
+            }));
+            hAngleSpan.innerHTML = Math.round(json.hAngle * 1000) / 1000;
+            vAngleSpan.innerHTML = Math.round(json.vAngle * 1000) / 1000;
+        });
+
         ws.on('close', function () {
             setTimeout(function () {
                 console.log("trying to reconnect");
