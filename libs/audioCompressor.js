@@ -29,15 +29,15 @@ function AudioCompressor(frequency, channel, volume, debug) {
     });
 
     // debug only
-    if(debug) {
-        ffmpeg.stderr.on('data', function (data) {
+    ffmpeg.stderr.on('data', function (data) {
+        if(debug) {
             logger.info(data.toString());
-        });
+        }
+    });
 
-        ffmpeg.on('close', function (code) {
-            logger.info('child process exited with code ' + code);
-        });
-    }
+    ffmpeg.on('close', function (code) {
+        logger.info('child process exited with code ' + code);
+    });
 }
 
 module.exports.AudioCompressor = AudioCompressor;
