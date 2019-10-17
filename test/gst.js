@@ -1,0 +1,1 @@
+// gst-launch-1.0 -e multifilesrc location=/dev/stdin caps="image/jpeg,framerate=30/1" ! jpegdec ! videoconvert ! queue ! x264enc ! mpegtsmux name=mux ! filesink location=/dev/stdout

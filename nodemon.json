@@ -2,7 +2,7 @@
     "verbose": true,
     "watch": ["*"],
     "ext": "*",
-    "ignore": ["node_modules", "logs"],
+    "ignore": ["node_modules", "logs", "*.log"],
     "execMap": {
       "rb": "ruby"
     }

@@ -88,11 +88,11 @@
         var ws = new WsClient(controlUrl);
 
         ws.on('open', function () {
-            ws.send(JSON.stringify({
-                "type": "query"
-            }));
-            hAngleSpan.innerHTML = Math.round(json.hAngle * 1000) / 1000;
-            vAngleSpan.innerHTML = Math.round(json.vAngle * 1000) / 1000;
+            setTimeout(function(){
+                ws.send(JSON.stringify({
+                    "type": "query"
+                }));
+            }, 1000);
         });
 
         ws.on('close', function () {
@@ -112,7 +112,7 @@
             var data = evt.data;
             var json = null;
             try {
-                json = JSON.parse(evt.data);
+                json = JSON.parse(data);
             } catch (e) {
                 console.error("JSON parse Error!");
                 return;
