@@ -69,9 +69,13 @@ function IpCam(name, param) {
                 }
                 controlLock = true;
                 clearInterval(id);
-                controlSocket.write(controlVStr + vAngle, function () {
-                    controlLock = false;
-                });
+                try {
+                    controlSocket.write(controlVStr + vAngle, function () {
+                        controlLock = false;
+                    });
+                } catch(e) {
+                    logger.error(e);
+                }
             }, 1);
         }
     }
