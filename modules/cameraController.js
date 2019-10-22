@@ -50,13 +50,13 @@ function addCamera(socket) {
         ws.sendAudio(name, data);
     });
 
-    // ipcam.on('audio1Data', function(name, data) {
-    //     ws.sendAudio(name, data);
-    // });
+    ipcam.on('audio1Data', function(name, data) {
+        ws.sendAudio1(name, data);
+    });
 
-    // ipcam.on('audio2Data', function(name, data) {
-    //     // ws.sendAudio(name, data);
-    // });   
+    ipcam.on('audio2Data', function(name, data) {
+        ws.sendAudio2(name, data);
+    });   
 
     ipcam.on('ready', function(name) {
         trigger('cameraReady', name, ipcam);

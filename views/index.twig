@@ -77,14 +77,14 @@
     <script type="text/javascript" src="/javascripts/wsClient.js"></script>
     <script type="text/javascript">
         var canvas = document.getElementById('video-canvas');
-        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/     {{ id }}';
+        var url = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/video/{{ id }}';
         var player = new JSMpeg.Player(url, {canvas: canvas});
 
         var canvasAudio = document.getElementById('audio-canvas');
-        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/     {{ id }}';
+        var urlAudio = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/audio/{{ id }}';
         var playerAudio = new JSMpeg.Player(urlAudio, {canvas: canvasAudio});
 
-        var controlUrl = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/     {{ id }}';
+        var controlUrl = 'ws://' + document.location.hostname + ':' + document.location.port + '/ws/control/{{ id }}';
         var ws = new WsClient(controlUrl);
 
         ws.on('open', function () {
